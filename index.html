@@ -3009,7 +3009,7 @@ hr.vm-rdiv{border:none;border-top:1px solid rgba(255,255,255,.07);margin:5px 0}
    CONFIG
    ════════════════════════════════════════════════════════════════ */
 const CONFIG = {
-  whatsapp: { number: '918920726361', message: 'Hi! I want to order a custom fridge magnet 🧲' },
+  whatsapp: { number: '+918920726361', message: 'Hi! I want to order a custom fridge magnet 🧲' },
   googleScriptURL: 'https://script.google.com/macros/s/AKfycbwnuz4_eEphZ9QPAlQ_cFBnhNst91qJqrnGJTZcN4qfHWjXCs2Yfg-QH_1KSrQgkxw/exec',
   categories: {
     pet: {
@@ -3425,15 +3425,19 @@ document.getElementById('co-place-btn').addEventListener('click', async () => {
   // ── Google Sheets submission ──
   if(CONFIG.googleScriptURL && CONFIG.googleScriptURL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'){
     try {
+      const cityEl = document.getElementById('co-city');
       const payload = {
         name, phone, whatsapp: wa||phone, payment,
         address, pincode, state, notes,
+        city: cityEl ? cityEl.value.trim() : '',
         items: cart.map(i=>`${i.name} ×${i.qty}`).join(', '),
         total: totalAmt,
         timestamp: new Date().toLocaleString('en-IN'),
+        images: [],
       };
       await fetch(CONFIG.googleScriptURL, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
     } catch(e) {
